@@ -30,7 +30,7 @@ class Client extends EventEmitter {
 
     constructor(configEndpoint, options, logger) {
         super();
-
+		this.logger = logger;
 		// extract outer client options so they aren't passed to inner client
 		const autoDiscover = getOption(options, 'autoDiscover', DEFAULT_AUTO_DISCOVER);
 		const autoDiscoverInterval = getOption(options, 'autoDiscoverInterval', DEFAULT_AUTO_DISCOVER_INTERVAL);
@@ -85,7 +85,7 @@ class Client extends EventEmitter {
 			factor: 1,
 			minTimeout: 0,
 			failures: 0
-		}, logger);
+		}, this.logger);
 
         new Promise((resolve, reject) => {
 
@@ -158,7 +158,7 @@ class Client extends EventEmitter {
         // (re)create inner client object - do not call end() on previous inner
         // client as this will cancel any in-flight operations
 		this.logger.info('Jackpot - memcached _createInnerClient')
-        this._innerClient = new Memcached(servers, this._options);
+        this._innerClient = new Memcached(servers, this._options, this.logger);
 
         // passthrough method calls from outer object to inner object - except
         // end(), which we explicitly override
