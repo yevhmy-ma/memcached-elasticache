@@ -28,6 +28,8 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "lodash": "^4.17.4",
-    "memcached": "^2.2.2"
+    "memcached": "^2.2.2",
+    "hashring": "3.2.x",
+    "retry": "0.6.0"
   }
 }

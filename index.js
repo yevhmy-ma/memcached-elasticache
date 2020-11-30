@@ -2,7 +2,7 @@
 
 const EventEmitter = require('events');
 const Promise = require('bluebird');
-const Memcached = require('memcached');
+const Memcached = require('./memcached');
 const _ = require('lodash');
 
 const GET_CLUSTER_COMMAND_OLD = 'get AmazonElastiCache:cluster';
@@ -28,7 +28,7 @@ function deleteOption(options, name) {
 
 class Client extends EventEmitter {
 
-    constructor(configEndpoint, options) {
+    constructor(configEndpoint, options, logger) {
         super();
 
 		// extract outer client options so they aren't passed to inner client
@@ -69,7 +69,7 @@ class Client extends EventEmitter {
         // stop auto-discovery
         if (this._timer) {
             clearInterval(this._timer);
-            this.timer = null;
+            this._timer = null;
         }
 
         this._innerClient.end();
@@ -85,7 +85,7 @@ class Client extends EventEmitter {
 			factor: 1,
 			minTimeout: 0,
 			failures: 0
-		});
+		}, logger);
 
         new Promise((resolve, reject) => {
 
@@ -157,6 +157,7 @@ class Client extends EventEmitter {
 
         // (re)create inner client object - do not call end() on previous inner
         // client as this will cancel any in-flight operations
+		this.logger.info('Jackpot - memcached _createInnerClient')
         this._innerClient = new Memcached(servers, this._options);
 
         // passthrough method calls from outer object to inner object - except
@@ -191,4 +192,7 @@ class Client extends EventEmitter {
     }
 }
 
-module.exports = Client;
+module.exports = {
+	Client,
+	Memcached,
+};
