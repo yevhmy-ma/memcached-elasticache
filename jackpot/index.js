@@ -183,7 +183,7 @@ Manager.prototype.allocate = function allocate(fn) {
 		, total, i, probability, connection;
 
 	i = total = this.pool.length;
-	this.logger.info('Jackpot connections pool', {
+	this.logger.warn('Jackpot connections pool', {
 		length: total,
 	});
 	// increase the allocation metric
@@ -212,7 +212,7 @@ Manager.prototype.allocate = function allocate(fn) {
 	// we didn't find a confident match, see if we are allowed to generate a fresh
 	// connection
 	if ((this.pool.length + this.pending) < this.limit) {
-		this.logger.info('Jackpot connections pool generating new connection');
+		this.logger.warn('Jackpot connections pool generating new connection');
 		// determine if the function expects a callback or not, this can be done by
 		// checking the length of the given function, as the amount of args accepted
 		// equals the length..
@@ -244,7 +244,7 @@ Manager.prototype.allocate = function allocate(fn) {
 		}
 	}
 
-	this.logger.info('Jackpot connections pool is full');
+	this.logger.warn('Jackpot connections pool is full');
 
 	// o, dear, we got issues.. we didn't find a valid connection and we cannot
 	// create more.. so we are going to check if we might have semi valid

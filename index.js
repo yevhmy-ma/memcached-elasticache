@@ -157,7 +157,7 @@ class Client extends EventEmitter {
 
         // (re)create inner client object - do not call end() on previous inner
         // client as this will cancel any in-flight operations
-		this.logger.info('Jackpot - memcached _createInnerClient')
+		this.logger.warn('Jackpot - memcached _createInnerClient')
         this._innerClient = new Memcached(servers, this._options, this.logger);
 
         // passthrough method calls from outer object to inner object - except
